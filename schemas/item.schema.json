@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wiki.moon-bot.io/api/schemas/item.schema.json",
+  "title": "ItemDetail",
+  "description": "Détail d'un objet Dofus Rétro (réponse de /api/item/{id}.json).",
+  "type": "object",
+  "required": ["id", "name", "type", "level"],
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "type": { "type": "string" },
+    "level": { "type": "integer" },
+    "weight": { "type": "integer" },
+    "price": { "type": "integer" },
+    "description": { "type": "string" },
+    "stats": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Caractéristiques en texte."
+    },
+    "recipe": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "name", "qty"],
+        "properties": {
+          "item_id": { "type": "integer" },
+          "name": { "type": "string" },
+          "qty": { "type": "integer" }
+        }
+      }
+    },
+    "url": { "type": "string", "format": "uri" }
+  }
+}

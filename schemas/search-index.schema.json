@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wiki.moon-bot.io/api/schemas/search-index.schema.json",
+  "title": "SearchIndex",
+  "description": "Index de recherche global (réponse de /api/search-index.json).",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["n", "u", "c"],
+    "properties": {
+      "n": { "type": "string", "description": "Nom" },
+      "u": { "type": "string", "description": "URL relative" },
+      "c": { "type": "string", "description": "Catégorie (Monstre, Objet, ...)" },
+      "i": { "type": "string", "description": "Chemin de l'icône" }
+    }
+  }
+}

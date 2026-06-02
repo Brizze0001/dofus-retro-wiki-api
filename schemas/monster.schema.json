@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wiki.moon-bot.io/api/schemas/monster.schema.json",
+  "title": "MonsterDetail",
+  "description": "Détail d'un monstre Dofus Rétro (réponse de /api/monster/{id}.json).",
+  "type": "object",
+  "required": ["id", "name", "level_min", "level_max", "weakness", "grades"],
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "boss": { "type": "boolean" },
+    "url": { "type": "string", "format": "uri" },
+    "level_min": { "type": "integer" },
+    "level_max": { "type": "integer" },
+    "weakness": { "type": "string", "description": "Point faible élémentaire (texte)." },
+    "grades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["grade", "level", "hp", "ap", "mp", "resist"],
+        "properties": {
+          "grade": { "type": "integer" },
+          "level": { "type": "integer" },
+          "hp": { "type": "integer" },
+          "ap": { "type": "integer" },
+          "mp": { "type": "integer" },
+          "resist": {
+            "type": "object",
+            "properties": {
+              "neutral": { "type": "integer" },
+              "earth": { "type": "integer" },
+              "fire": { "type": "integer" },
+              "water": { "type": "integer" },
+              "air": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "locations": { "type": "array", "items": { "type": "object" } }
+  }
+}

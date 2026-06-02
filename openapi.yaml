@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Dofus Rétro API (Wiki communautaire)
+  description: >
+    API publique, gratuite et sans clé exposant les données de jeu de Dofus Rétro (1.29) :
+    monstres, objets, recettes de craft, statistiques, résistances et index de recherche.
+    Données extraites du client et servies en JSON statique par le Wiki Dofus Rétro communautaire
+    (https://wiki.moon-bot.io/). Projet non officiel, non affilié à Ankama Games.
+  version: "1.0.0"
+  contact:
+    name: Wiki Dofus Rétro
+    url: https://wiki.moon-bot.io/
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://wiki.moon-bot.io
+    description: Wiki Dofus Rétro (production)
+tags:
+  - name: Monstres
+  - name: Objets
+  - name: Recherche
+paths:
+  /api/monsters.json:
+    get:
+      tags: [Monstres]
+      summary: Liste de tous les monstres
+      description: Retourne la liste complète des monstres (≈ 1 471 entrées).
+      responses:
+        "200":
+          description: Liste des monstres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonsterSummary"
+  /api/monster/{id}.json:
+    get:
+      tags: [Monstres]
+      summary: Détail d'un monstre
+      description: >
+        Retourne le détail d'un monstre : niveaux min/max, point faible élémentaire,
+        et paliers (grades) avec PV/PA/PM et résistances par élément.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant numérique du monstre (ex. 37 = Craqueleur).
+          schema:
+            type: integer
+          example: 37
+      responses:
+        "200":
+          description: Détail du monstre
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonsterDetail"
+        "404":
+          description: Monstre introuvable (page HTML 404)
+  /api/items.json:
+    get:
+      tags: [Objets]
+      summary: Liste de tous les objets
+      description: Retourne la liste complète des objets (≈ 11 716 entrées).
+      responses:
+        "200":
+          description: Liste des objets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ItemSummary"
+  /api/item/{id}.json:
+    get:
+      tags: [Objets]
+      summary: Détail d'un objet
+      description: Retourne le détail d'un objet : type, niveau, poids, prix, caractéristiques et recette de craft.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant numérique de l'objet (ex. 39 = Petite Amulette du Hibou).
+          schema:
+            type: integer
+          example: 39
+      responses:
+        "200":
+          description: Détail de l'objet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemDetail"
+        "404":
+          description: Objet introuvable (page HTML 404)
+  /api/search-index.json:
+    get:
+      tags: [Recherche]
+      summary: Index de recherche global
+      description: Index léger (monstres + objets) pour une barre de recherche instantanée.
+      responses:
+        "200":
+          description: Index de recherche
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SearchEntry"
+components:
+  schemas:
+    MonsterSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: >
+            Identifiant de liste. Attention : peut ne pas être unique d'une entrée à l'autre ;
+            utilisez `url` comme clé canonique, et l'id numérique du détail pour /api/monster/{id}.json.
+        name:
+          type: string
+          example: Craqueleur
+        level_min:
+          type: string
+          description: Tranche de niveau sous forme de texte.
+          example: "1 à 6"
+        url:
+          type: string
+          format: uri
+          example: https://wiki.moon-bot.io/monstres/craqueleur/
+    MonsterDetail:
+      type: object
+      properties:
+        id: { type: integer, example: 37 }
+        name: { type: string, example: Craqueleur }
+        boss: { type: boolean, example: false }
+        url: { type: string, format: uri }
+        level_min: { type: integer, example: 1 }
+        level_max: { type: integer, example: 6 }
+        weakness:
+          type: string
+          description: Point faible élémentaire (texte).
+          example: Feu
+        grades:
+          type: array
+          items: { $ref: "#/components/schemas/Grade" }
+        locations:
+          type: array
+          description: Localisations (peut être vide).
+          items: { type: object }
+    Grade:
+      type: object
+      properties:
+        grade: { type: integer, example: 1 }
+        level: { type: integer, example: 1 }
+        hp: { type: integer, description: Points de vie, example: 100 }
+        ap: { type: integer, description: Points d'action (PA), example: 5 }
+        mp: { type: integer, description: Points de mouvement (PM), example: 2 }
+        resist: { $ref: "#/components/schemas/Resist" }
+    Resist:
+      type: object
+      description: Résistances en pourcentage par élément.
+      properties:
+        neutral: { type: integer, example: 0 }
+        earth: { type: integer, example: 25 }
+        fire: { type: integer, example: -50 }
+        water: { type: integer, example: 6 }
+        air: { type: integer, example: -12 }
+    ItemSummary:
+      type: object
+      properties:
+        id: { type: integer, example: 39 }
+        name: { type: string, example: Petite Amulette du Hibou }
+        type: { type: string, example: Amulette }
+        level: { type: integer, example: 1 }
+        url: { type: string, format: uri }
+    ItemDetail:
+      type: object
+      properties:
+        id: { type: integer, example: 39 }
+        name: { type: string, example: Petite Amulette du Hibou }
+        type: { type: string, example: Amulette }
+        level: { type: integer, example: 1 }
+        weight: { type: integer, example: 4 }
+        price: { type: integer, description: Prix indicatif PNJ, example: 100 }
+        description: { type: string }
+        stats:
+          type: array
+          description: Caractéristiques sous forme de texte.
+          items: { type: string }
+          example: ["+2 en intelligence"]
+        recipe:
+          type: array
+          items: { $ref: "#/components/schemas/RecipeIngredient" }
+        url: { type: string, format: uri }
+    RecipeIngredient:
+      type: object
+      properties:
+        item_id: { type: integer, example: 441 }
+        name: { type: string, example: Cuivre }
+        qty: { type: integer, example: 1 }
+    SearchEntry:
+      type: object
+      properties:
+        n: { type: string, description: Nom, example: Craqueleur }
+        u: { type: string, description: URL relative, example: /monstres/craqueleur/ }
+        c: { type: string, description: Catégorie, example: Monstre }
+        i: { type: string, description: Chemin de l'icône, example: /icons/sprite_1156.png }

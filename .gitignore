@@ -1,0 +1,25 @@
+# Système
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Divers
+*.log
+*.tmp
+.cache/
