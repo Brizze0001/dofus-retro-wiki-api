@@ -1,5 +1,7 @@
 # Dofus Rétro API — API JSON communautaire (monstres, objets, recettes) 🐉⚔️
 
+**🌐 Langues / Languages / Idiomas : [🇫🇷 Français](README.md) · [🇬🇧 English](README.en.md) · [🇪🇸 Español](README.es.md)**
+
 > **API publique, gratuite et sans clé** pour les données de **Dofus Rétro** : monstres, objets, recettes de craft, statistiques, résistances et zones.
 > Propulsée par le **[Wiki Dofus Rétro communautaire](https://wiki.moon-bot.io/)** — données extraites du client, au format **JSON statique** avec **CORS** ouvert.
 
